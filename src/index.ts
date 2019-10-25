@@ -419,7 +419,8 @@ async function main() {
       } else {
         console.log(`Could not resume; there's nothing to resume from!`);
       }
-    } else {
+    }
+    if (args.resume && bak == null) {
       articlesUnderLabel = await getArticlesByLabel(label);
       console.log('Saving pages.json...'.blue);
       fs.writeFileSync(path.join(labelDir, 'pages.json'), JSON.stringify(articlesUnderLabel, null, 2));
