@@ -417,8 +417,7 @@ async function main() {
           articlesUnderLabel = bak['pages'];
         }
       } else {
-        console.log(`Could not resume; there's nothing to resume from! Exiting...`);
-        process.exit(1);
+        console.log(`Could not resume; there's nothing to resume from!`);
       }
     } else {
       articlesUnderLabel = await getArticlesByLabel(label);
