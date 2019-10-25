@@ -17,3 +17,21 @@ This will scrape all articles since October 1st, 2019 with the label "Story".
 ```
 npm start -- --min "2019-10-01" -l "Story"
 ```
+
+## Output
+The output file structure will look like this, using the default `saveby` option (`savedir`):
+```
+data/
+`-- <Label Name>
+    `-- articles/
+        `-- <Article Friendly Link Name>
+            `-- data.json
+            `-- page.html
+    `-- pages.json
+`-- bak.json
+```
+
+- `data.json` consists of some extracted data, like YouTube links, image sources, author, and the title.
+- `page.html` is the unmodified article page.
+- `pages.json` has a list of the article links and publish dates found on each search page.
+- `bak.json` has the contents of `pages.json` (so far), as well as other relevant information needed to restore the program if it crashed. This file is *not* automatically removed; **remove it after the script has successfully completed.**
