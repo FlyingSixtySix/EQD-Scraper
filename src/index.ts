@@ -408,7 +408,7 @@ async function main() {
       throw new Error('pages.json and/or articles.json exists in label directory; use --overwrite flag to overwrite');
     }
 
-    const bak = await loadBackup();
+    let bak = await loadBackup();
 
     let articlesUnderLabel;
     if (args.resume) {
@@ -485,6 +485,9 @@ async function main() {
         fs.writeFileSync(path.join(articlesDir, friendlyLink, 'page.html'), articleInformation.raw);
         console.log('Writing ' + `data/${label}/articles/${friendlyLink}/data.json`.cyan + '...');
         fs.writeFileSync(path.join(articlesDir, friendlyLink, 'data.json'), JSON.stringify(articleInformation.data, null, 2));
+      }
+      if (bak == null || typeof bak['article'] === 'undefined') {
+        bak = await loadBackup();
       }
       bak['article'] = i;
       await saveBackup(bak);
