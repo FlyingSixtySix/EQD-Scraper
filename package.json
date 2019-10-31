@@ -33,6 +33,7 @@
     "@types/requestretry": "^1.12.5",
     "@types/yargs": "^13.0.3",
     "semistandard": "^14.2.0",
+    "ts-node": "^8.4.1",
     "typescript": "^3.6.4"
   }
 }
