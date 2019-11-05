@@ -1,6 +1,8 @@
 import * as moment from 'moment';
 import 'colors';
 
+const sanitize = require('sanitize-filename');
+
 export function getPackage() {
   const packageJson = require('../package.json');
   return packageJson;
@@ -50,4 +52,14 @@ export class URLBuilder {
     this.params.push({ 'max-results': maxResults });
     return this;
   }
+}
+
+export function cleanArticleName(title: string, legacy: boolean): string {
+  return legacy ? title
+    .replace(/[!@#$%^&*()_=+\[{\]};:'"\\|,<.>/? ]+/g, '-')
+    .toLowerCase() : sanitize(title);
+}
+
+export function cleanProtocol(url: string): string {
+  if (url) return url.startsWith('//') ? 'https:' + url : url;
 }

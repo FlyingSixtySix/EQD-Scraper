@@ -24,7 +24,3 @@ export function error(...x) {
 export function fatal(...x) {
   log('FATAL'.bgBlack.red, ...x);
 }
-
-export function separator() {
-  console.log('-'.repeat(process.stdout.columns || 80));
-}
