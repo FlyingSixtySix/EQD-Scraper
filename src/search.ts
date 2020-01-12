@@ -117,7 +117,11 @@ export async function getArticlesByLabel(options: string | ArticlesByLabelOption
   options.nextURL = getNextURL($);
   fs.writeFileSync(path.join(__dirname, '..', 'bak'), getPrevURL($) || nextURL);
   const entries = getArticlesInSearch($);
-  let count = parseInt(/start-index=([0-9]+)/.exec(nextURL)[1]) || 0;
+  const startIndexMatches = /start-index=([\d]+)/.exec(nextURL);
+  let count = 0;
+  if (startIndexMatches != null) {
+    count = parseInt(startIndexMatches[1]);
+  }
   for (const entry of entries.toArray()) {
     count++;
     const metadata = getArticleMetadata(entry);
