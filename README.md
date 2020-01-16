@@ -1,4 +1,6 @@
 # EQD-Scraper
+[!Package Version](https://img.shields.io/github/package-json/v/FlyingSixtySix/EQD-Scraper)
+
 A utility to scrape all (or some) articles from [Equestria Daily](https://equestriadaily.com/).
 Takes roughly 7-9 minutes to scrape all articles.
 
