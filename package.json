@@ -1,0 +1,34 @@
+{
+  "name": "eqd-scraper",
+  "version": "0.1.0",
+  "description": "Utility to scrape https://equestriadaily.com/ articles",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FlyingSixtySix/EQD-Scraper.git"
+  },
+  "keywords": [
+    "Equestria",
+    "Daily",
+    "scraper",
+    "utility"
+  ],
+  "author": "Andrew Black <andrewblack2656@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/FlyingSixtySix/EQD-Scraper/issues"
+  },
+  "homepage": "https://github.com/FlyingSixtySix/EQD-Scraper#readme",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.8",
+    "yargs": "^15.1.0"
+  },
+  "devDependencies": {
+    "semistandard": "^14.2.0"
+  }
+}
