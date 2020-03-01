@@ -116,9 +116,8 @@ function parseArgs (argv) {
     }
   }
   if (argv.labels != null) {
-    // URL encode all labels and join with commas
+    // Join all labels with commas
     options.labels = argv.labels
-      .map(label => encodeURIComponent(label))
       .join(',');
   }
   // Maximum results per search iteration
