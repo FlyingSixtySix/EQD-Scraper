@@ -18,7 +18,7 @@ function logf (text) {
   // TODO: Handle quiet + verbose
   const { year, month, day, hour, minute, second } = getDateComponents();
   const formattedDateTime = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
-  process.stdout.write(`${formattedDateTime} | ${util.format(text)}`);
+  if (!logf.quiet) process.stdout.write(`${formattedDateTime} | ${util.format(text)}`);
 }
 
 /**

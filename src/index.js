@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { log, numberInRange, parseArgDate } = require('./utils');
+const { log, logf, numberInRange, parseArgDate } = require('./utils');
 const { search } = require('./search');
 const { aggregate } = require('./aggregate');
 
@@ -41,6 +41,12 @@ require('yargs') // eslint-disable-line no-unused-expressions
         type: 'boolean',
         default: false,
         describe: 'overwrite existing output'
+      })
+      .option('quiet', {
+        alias: 'q',
+        type: 'boolean',
+        default: false,
+        describe: 'disables all standard output'
       })
       .middleware(async argv => {
         // If --max-results is out of range [1, 500], throw a RangeError
@@ -108,6 +114,8 @@ async function init () {
  * @returns {object} The parsed options.
  */
 function parseArgs (argv) {
+  // Disable log output if quiet
+  logf.quiet = argv.quiet;
   // Handle scrape options
   const options = {};
   if (argv.date != null) {
@@ -131,7 +139,7 @@ function parseArgs (argv) {
   // Maximum search iterations
   options.maxIter = argv['max-iterations'];
   // Overwrite existing articles or halt
-  options.overwrite = argv['overwrite'];
+  options.overwrite = argv.overwrite;
   return options;
 }
 
@@ -143,9 +151,9 @@ async function scrape (argv) {
   await init();
   const options = parseArgs(argv);
   const label = 'Finished scraping; time elapsed';
-  console.time(label);
+  if (!argv.quiet) console.time(label);
   await search(options);
-  console.timeEnd(label);
+  if (!argv.quiet) console.timeEnd(label);
 }
 
 module.exports = { articlesPath };

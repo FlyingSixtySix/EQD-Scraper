@@ -131,7 +131,7 @@ async function saveData (page, options) {
     const extractedPath = path.join(articlePath, 'extracted.json');
     // If the article directory already exists, and overwriting is disabled, halt
     if (fs.existsSync(articlePath) && !options.overwrite) {
-      console.log('skipped and halted (-O to overwrite)')
+      log('skipped and halted (-O to overwrite)')
       return false;
     }
     // Create the article directory
@@ -154,7 +154,7 @@ async function saveData (page, options) {
     const extracted = extract(item.content, options);
     await fs.promises.writeFile(extractedPath, JSON.stringify(extracted, null, 2));
     // And we're done!
-    console.log('done');
+    log('done');
   }
   return true;
 }
