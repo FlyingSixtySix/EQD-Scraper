@@ -36,6 +36,12 @@ require('yargs') // eslint-disable-line no-unused-expressions
         default: Infinity,
         describe: 'maximum search iterations'
       })
+      .option('overwrite', {
+        alias: 'O',
+        type: 'boolean',
+        default: false,
+        describe: 'overwrite existing output'
+      })
       .middleware(async argv => {
         // If --max-results is out of range [1, 500], throw a RangeError
         if (!numberInRange(argv['--max-results'], 1, 500)) {
@@ -124,6 +130,8 @@ function parseArgs (argv) {
   options.maxPerPage = argv['max-results'];
   // Maximum search iterations
   options.maxIter = argv['max-iterations'];
+  // Overwrite existing articles or halt
+  options.overwrite = argv['overwrite'];
   return options;
 }
 

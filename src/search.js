@@ -19,6 +19,7 @@ const urlBase = `https://www.googleapis.com${pathBase}?key=${config.bloggerAPIKe
  * @property {Date} specificDate The specific date to search on.
  * @property {InclusiveDateRange} dateRange A date range to search on.
  * @property {boolean} separateYTLinks Separates all YouTube links into a separate search category.
+ * @property {boolean} overwrite Whether to overwrite existing files or halt.
  */
 
 /**
@@ -128,6 +129,11 @@ async function saveData (page, options) {
     const bodyPath = path.join(articlePath, 'body.html');
     const metadataPath = path.join(articlePath, 'metadata.json');
     const extractedPath = path.join(articlePath, 'extracted.json');
+    // If the article directory already exists, and overwriting is disabled, halt
+    if (fs.existsSync(articlePath) && !options.overwrite) {
+      console.log('skipped and halted (-O to overwrite)')
+      return false;
+    }
     // Create the article directory
     await fs.promises.mkdir(articlePath, { recursive: true }).catch(err => {
       if (err.code === 'EEXIST') {
@@ -150,15 +156,17 @@ async function saveData (page, options) {
     // And we're done!
     console.log('done');
   }
+  return true;
 }
 
 /**
  * Loops over each page in the search results.
  * @param {URL} url The formatted search URL.
  * @param {Array<object>} data The recursive dataset.
+ * @param {object} options The program options.
  * @returns {Array<object>} The dataset.
  */
-async function loopPages (url, data) {
+async function loopPages (url, data, options) {
   searches++;
   log(`GET ${url.href}`);
   let response = await request(url.href).catch(err => {
@@ -177,13 +185,16 @@ async function loopPages (url, data) {
   // Parse the data on the page.
   response = JSON.parse(response);
   // Save the data.
-  await saveData(response);
+  const overwritten = !(await saveData(response, options));
+  if (overwritten) {
+    return data;
+  }
   // Push all the data on this page to the dataset.
   data.push(response);
   // If there's a next page, continue the cycle
   if (response.nextPageToken != null && searches < maxIter) {
     url.searchParams.set('pageToken', response.nextPageToken);
-    await loopPages(url, data);
+    await loopPages(url, data, options);
   }
   // Otherwise... we've finished
   return data;
@@ -197,8 +208,7 @@ async function loopPages (url, data) {
 async function search (options) {
   maxIter = options.maxIter;
   const url = formatSearchURL(options);
-  const data = await loopPages(url, []);
-  return data;
+  return loopPages(url, [], options);
 }
 
 module.exports = { search };

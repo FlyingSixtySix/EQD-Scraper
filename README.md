@@ -30,6 +30,10 @@ The structure in which data is saved looks like so:
 
 ## Scrape Options
 
+| Parameter | Alias | Description | Example |
+| --- | --- | --- | --- |
+| `--overwrite` | `-O` | Overwrites existing saved articles. | `-O` |
+
 ### Search by label
 
 | Parameter | Alias | Description | Example |
