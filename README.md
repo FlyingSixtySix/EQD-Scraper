@@ -24,6 +24,7 @@ The structure in which data is saved looks like so:
     │           ├── body.html
     │           ├── extracted.json
     │           └── metadata.json
+    ├── urlIDs.json
     └── youtube.json*
 
 \* Only with the `aggregate` sub-command (see below)

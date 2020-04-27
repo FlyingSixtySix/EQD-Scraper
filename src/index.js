@@ -156,4 +156,4 @@ async function scrape (argv) {
   if (!argv.quiet) console.timeEnd(label);
 }
 
-module.exports = { articlesPath };
+module.exports = { outputPath, articlesPath };

@@ -119,12 +119,21 @@ let searches = 0;
  * @param {Options} options The search and extraction options.
  */
 async function saveData (page, options) {
+  const { outputPath, articlesPath } = require('./index');
+  const urlIDsPath = path.join(outputPath, 'urlIDs.json');
+  // Load the currently saved URL-IDs.
+  const urlIDs = await fs.promises.readFile(urlIDsPath, 'utf8').then(file => {
+    return JSON.parse(file);
+  }).catch(() => {
+    return {};
+  });
+  // Whether or not the script ran into an already-existing article.
+  let foundOld = false;
   for (const item of page.items) {
     logf(`Saving article ${item.title}... `);
     const published = new Date(item.published);
     const year = published.getFullYear();
     const month = published.getMonth() + 1;
-    const { articlesPath } = require('./index');
     const articlePath = path.join(articlesPath, `${year}-${pad(month)}`, item.id);
     const bodyPath = path.join(articlePath, 'body.html');
     const metadataPath = path.join(articlePath, 'metadata.json');
@@ -132,7 +141,8 @@ async function saveData (page, options) {
     // If the article directory already exists, and overwriting is disabled, halt
     if (fs.existsSync(articlePath) && !options.overwrite) {
       console.log('skipped and halted (-O to overwrite)')
-      return false;
+      foundOld = true;
+      break;
     }
     // Create the article directory
     await fs.promises.mkdir(articlePath, { recursive: true }).catch(err => {
@@ -150,13 +160,18 @@ async function saveData (page, options) {
     const metadata = JSON.parse(JSON.stringify(item));
     delete metadata.content;
     await fs.promises.writeFile(metadataPath, JSON.stringify(metadata, null, 2));
+    urlIDs[metadata.url.split('/').pop()] = metadata.id;
     // Save extracted.json
     const extracted = extract(item.content, options);
     await fs.promises.writeFile(extractedPath, JSON.stringify(extracted, null, 2));
     // And we're done!
     console.log('done');
   }
-  return true;
+  // Save the new URL-IDs.
+  logf('Saving new URL-IDs... ');
+  await fs.promises.writeFile(urlIDsPath, JSON.stringify(urlIDs, null, 2));
+  console.log('done');
+  return foundOld;
 }
 
 /**
@@ -185,8 +200,8 @@ async function loopPages (url, data, options) {
   // Parse the data on the page.
   response = JSON.parse(response);
   // Save the data.
-  const overwritten = !(await saveData(response, options));
-  if (overwritten) {
+  const foundOld = await saveData(response, options);
+  if (foundOld) {
     return data;
   }
   // Push all the data on this page to the dataset.
