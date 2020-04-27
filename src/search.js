@@ -131,15 +131,15 @@ async function saveData (page, options) {
     const extractedPath = path.join(articlePath, 'extracted.json');
     // If the article directory already exists, and overwriting is disabled, halt
     if (fs.existsSync(articlePath) && !options.overwrite) {
-      log('skipped and halted (-O to overwrite)')
+      console.log('skipped and halted (-O to overwrite)')
       return false;
     }
     // Create the article directory
     await fs.promises.mkdir(articlePath, { recursive: true }).catch(err => {
       if (err.code === 'EEXIST') {
-        log('Article output directory already exists.');
+        console.log('Article output directory already exists.');
       } else {
-        log('Could not create article output directory.');
+        console.log('Could not create article output directory.');
         throw err;
       }
     });
@@ -154,7 +154,7 @@ async function saveData (page, options) {
     const extracted = extract(item.content, options);
     await fs.promises.writeFile(extractedPath, JSON.stringify(extracted, null, 2));
     // And we're done!
-    log('done');
+    console.log('done');
   }
   return true;
 }
