@@ -7,7 +7,9 @@ const util = require('util');
  * @param {string} text The text to log.
  */
 function log (text) {
-  logf(text + '\n');
+  const { year, month, day, hour, minute, second } = getDateComponents();
+  const formattedDateTime = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+  logf(`${formattedDateTime} | ${util.format(text)}\n`);
 }
 
 /**
@@ -15,10 +17,7 @@ function log (text) {
  * @param {string} text The text to log.
  */
 function logf (text) {
-  // TODO: Handle quiet + verbose
-  const { year, month, day, hour, minute, second } = getDateComponents();
-  const formattedDateTime = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
-  if (!logf.quiet) process.stdout.write(`${formattedDateTime} | ${util.format(text)}`);
+  if (!logf.quiet) process.stdout.write(text);
 }
 
 /**
