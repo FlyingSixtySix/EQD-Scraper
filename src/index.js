@@ -5,10 +5,12 @@ const path = require('path');
 const { log, logf, numberInRange, parseArgDate } = require('./utils');
 const { search } = require('./search');
 const { aggregate } = require('./aggregate');
+const { urlIDsFn } = require('./urlids');
 
 const outputPath = path.join(__dirname, '..', 'output');
 const articlesPath = path.join(outputPath, 'articles');
 
+// noinspection BadExpressionStatementJS
 require('yargs') // eslint-disable-line no-unused-expressions
   .scriptName('eqd-scraper')
   .usage('$0 [OPTIONS]')
@@ -89,6 +91,7 @@ require('yargs') // eslint-disable-line no-unused-expressions
         default: false
       });
   }, aggregate)
+  .command('urlids', 'generates a URL-article ID map', urlIDsFn)
   .help()
   .version()
   .argv;
