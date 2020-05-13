@@ -5,11 +5,20 @@ const util = require('util');
 /**
  * Logs text to stdout with a localized timestamp.
  * @param {string} text The text to log.
+ * @param {boolean} newline Whether to include a newline.
  */
-function log (text) {
+function log (text, newline = true) {
   const { year, month, day, hour, minute, second } = getDateComponents();
   const formattedDateTime = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
-  logf(`${formattedDateTime} | ${util.format(text)}\n`);
+  logf(`${formattedDateTime} | ${util.format(text)}` + (newline ? '\n' : ''));
+}
+
+/**
+ * Logs timestamped text without a newline.
+ * @param {string} text The text to log.
+ */
+function logPart (text) {
+  log(text, false);
 }
 
 /**
@@ -117,4 +126,4 @@ function fixProtocol (url, https) {
   return url;
 }
 
-module.exports = { log, logf, pad, numberInRange, parseArgDate, fixProtocol };
+module.exports = { log, logPart, logf, pad, numberInRange, parseArgDate, fixProtocol };

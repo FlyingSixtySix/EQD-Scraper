@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const { URL } = require('url');
 const request = require('request-promise-native');
-const { log, logf, pad } = require('./utils');
+const { log, logPart, logf, pad } = require('./utils');
 const { extract } = require('./extract');
 
 const config = require('../config');
@@ -130,7 +130,7 @@ async function saveData (page, options) {
   // Whether or not the script ran into an already-existing article.
   let foundOld = false;
   for (const item of page.items) {
-    logf(`Saving article ${item.title}... `);
+    logPart(`Saving article ${item.title}... `);
     const published = new Date(item.published);
     const year = published.getFullYear();
     const month = published.getMonth() + 1;
@@ -140,16 +140,16 @@ async function saveData (page, options) {
     const extractedPath = path.join(articlePath, 'extracted.json');
     // If the article directory already exists, and overwriting is disabled, halt
     if (fs.existsSync(articlePath) && !options.overwrite) {
-      console.log('skipped and halted (-O to overwrite)')
+      logf('skipped and halted (-O to overwrite)\n');
       foundOld = true;
       break;
     }
     // Create the article directory
     await fs.promises.mkdir(articlePath, { recursive: true }).catch(err => {
       if (err.code === 'EEXIST') {
-        console.log('Article output directory already exists.');
+        log('Article output directory already exists.');
       } else {
-        console.log('Could not create article output directory.');
+        log('Could not create article output directory.');
         throw err;
       }
     });
@@ -165,12 +165,12 @@ async function saveData (page, options) {
     const extracted = extract(item.content, options);
     await fs.promises.writeFile(extractedPath, JSON.stringify(extracted, null, 2));
     // And we're done!
-    console.log('done');
+    logf('done');
   }
   // Save the new URL-IDs.
-  logf('Saving new URL-IDs... ');
+  logPart('Saving new URL-IDs... ');
   await fs.promises.writeFile(urlIDsPath, JSON.stringify(urlIDs, null, 2));
-  console.log('done');
+  logf('done\n');
   return foundOld;
 }
 

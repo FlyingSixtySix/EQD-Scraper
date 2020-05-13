@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { logf } = require('./utils');
+const { logPart, logf } = require('./utils');
 
 const outputPath = path.join(__dirname, '..', 'output');
 const articlesPath = path.join(outputPath, 'articles');
@@ -20,19 +20,19 @@ async function urlIDsFn (argv) {
   });
   const dates = fs.readdirSync(articlesPath);
   for (const date of dates) {
-    logf(`Reading articles for ${date}... `);
+    logPart(`Reading articles for ${date}... `);
     const posts = fs.readdirSync(path.join(articlesPath, date));
     for (const post of posts) {
       const metadataText = fs.readFileSync(path.join(articlesPath, date, post, 'metadata.json'), 'utf8');
       const metadata = JSON.parse(metadataText);
       urlIDs[metadata.url.split('/').pop()] = metadata.id;
     }
-    console.log('done');
+    logf('done');
   }
   // Save the new URL-IDs.
-  logf('Saving new URL-IDs... ');
+  logPart('Saving new URL-IDs... ');
   await fs.promises.writeFile(urlIDsPath, JSON.stringify(urlIDs, null, 2));
-  console.log('done');
+  logf('done');
 }
 
 module.exports = { urlIDsFn }
